@@ -1,5 +1,9 @@
 # manifest
 
+[![GoDoc](
+	https://godoc.org/github.com/skycoin/viscript?status.svg)](
+		https://godoc.org/github.com/ZSM5J/manifest/manifest)
+
 
 App can be started with 2 options: 
 
