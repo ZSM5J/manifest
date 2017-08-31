@@ -13,7 +13,7 @@ import (
 )
 
 
-
+//SnapshotList show all snapshots in ./snapshots
 func SnapshotList(flag int) []string {
 	var str []string
 	snapCount := 0
@@ -35,7 +35,7 @@ func SnapshotList(flag int) []string {
 }
 
 
-
+//PromptCycle wait for user command
 func PromptCycle() {
 	for  {
 		newCommand, args := InputFromCli()
@@ -55,6 +55,7 @@ func PromptCycle() {
 	}
 }
 
+//InputFromCli format user command
 func InputFromCli() (command string, args []string) {
 	fmt.Println("Wait for command(example: merge 0 3)")
 	command = ""
@@ -76,7 +77,7 @@ func InputFromCli() (command string, args []string) {
 	return
 }
 
-
+//CheckMergeArg that args will be correct
 func CheckMergeArg(args []string, snapCount int) (bool, []int) {
 	var argsInt []int
 	for _,arg := range args {
@@ -93,6 +94,7 @@ func CheckMergeArg(args []string, snapCount int) (bool, []int) {
 	return true, argsInt
 }
 
+//MergeSnapshot create new snapshot from two or more others
 func MergeSnapshot(snaps []string,args []int) {
 	mainSnap := ReadCVS(snaps[args[0]])
 
@@ -115,7 +117,7 @@ func MergeSnapshot(snaps []string,args []int) {
 	csvFile.Close()
 }
 
-
+//Merge two snapshots
 func Merge(main []FileInfo, next []FileInfo) ([]FileInfo){
 	flag := 0
 	for _, newfile := range next {
@@ -137,6 +139,7 @@ func Merge(main []FileInfo, next []FileInfo) ([]FileInfo){
 	return main
 }
 
+//CompareFiles check what file was modified early
 func CompareFiles(old FileInfo, new FileInfo) FileInfo {
 	t1, err := time.Parse("2006-01-02 15:04:05", old.Modified)
 	if err != nil{
@@ -152,6 +155,7 @@ func CompareFiles(old FileInfo, new FileInfo) FileInfo {
 	return old
 }
 
+//ReadCVS converts CSV into struct
 func ReadCVS (path string) []FileInfo {
 	file, err := os.Open(path)
 	if err != nil {

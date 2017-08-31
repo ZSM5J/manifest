@@ -13,6 +13,7 @@ import (
 	"encoding/hex"
 )
 
+//FileInfo represent info about file
 type FileInfo struct {
 	Path string
 	Name string
@@ -21,6 +22,7 @@ type FileInfo struct {
 	Hash string
 }
 
+//ReadFiles takes paths to folders and read information about all files where.
 func ReadFiles(path []string) {
 	//create CSV file
 	csvFileName := time.Now().UTC().Format("2006-01-02 15:04:05") + ".csv"
@@ -60,7 +62,7 @@ func ReadFiles(path []string) {
 
 }
 
-//write in CSV file
+//WriteIntoCSV format struct and write into CSV
 func WriteIntoCSV(w *csv.Writer, filesInfo []FileInfo) {
 	for j, f := range filesInfo {
 		if len(f.Path) > 0 {
@@ -77,7 +79,7 @@ func WriteIntoCSV(w *csv.Writer, filesInfo []FileInfo) {
 
 }
 
-//format files info
+//FormatFiles get files and format information about they into struct
 func FormatFiles(files []os.FileInfo, path string) ([]FileInfo, []string) {
 	filesInfo := make([]FileInfo, len(files))
     var subFolders []string
@@ -99,7 +101,7 @@ func FormatFiles(files []os.FileInfo, path string) ([]FileInfo, []string) {
 }
 
 
-//Create hash256 from file
+//CreateHash return a unique hash256 of file
 func CreateHash(path string) string {
 	f, err := os.Open(path)
 	if err != nil {
