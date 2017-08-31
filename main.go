@@ -1,8 +1,8 @@
 package main
 
 import (
-	"manifest/config"
-	"manifest/manifest"
+	"github.com/ZSM5J/config"
+	"github.com/ZSM5J/manifest"
 	"flag"
 	"fmt"
 )
