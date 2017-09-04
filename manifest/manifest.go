@@ -26,8 +26,9 @@ type FileInfo struct {
 func ReadFiles(path []string) {
 	//create CSV file
 	csvFileName := time.Now().UTC().Format("2006-01-02 15:04:05") + ".csv"
-	csvFile, err := os.Create("./snapshots/" + csvFileName)
+	csvFile, err := os.Create("../snapshots/" + csvFileName)
 	if err != nil {
+		log.Println(err)
 		return
 	}
 	w := csv.NewWriter(csvFile)

@@ -17,7 +17,7 @@ import (
 func SnapshotList(flag int) []string {
 	var str []string
 	snapCount := 0
-	files, err := ioutil.ReadDir("./snapshots")
+	files, err := ioutil.ReadDir("../snapshots")
 	if err != nil {
 		fmt.Println("can't find snapshots folder")
 	} else {
@@ -25,7 +25,7 @@ func SnapshotList(flag int) []string {
 		for _, f := range files {
 			if f.Name()[len(f.Name())-3:] == "csv" {
 				if flag == 1 {fmt.Println("Snapshot " + strconv.Itoa(snapCount) + ": " + f.Name()) }
-				str = append(str, "./snapshots/"+f.Name())
+				str = append(str, "../snapshots/"+f.Name())
 				snapCount++
 			}
 		}
@@ -107,7 +107,7 @@ func MergeSnapshot(snaps []string,args []int) {
 
 	//write to csv merged info.
 	csvFileName := time.Now().UTC().Format("2006-01-02 15:04:05") + ".csv"
-	csvFile, err := os.Create("./snapshots/" + csvFileName)
+	csvFile, err := os.Create("../snapshots/" + csvFileName)
 	if err != nil {
 		return
 	}
