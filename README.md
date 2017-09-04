@@ -5,12 +5,8 @@
 		https://godoc.org/github.com/ZSM5J/manifest/manifest)
 
 
-App can be started with 2 options: 
+All functionality in cmd folder. Open read or merge folder and start executable file from command line. 
 
-go run main.go -o read
+Read create a snapshot in cmd/snapshots.
 
-Take all folders from config.json and create snapshot file in CVS format.
-
-go run main.go -o merge
-
-Show all snapshots and provide command to merge 2 or more snapshots.
+Merge allow to merge two or more snapshots. 
