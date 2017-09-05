@@ -11,7 +11,10 @@ import (
 	"crypto/sha256"
 	"io"
 	"encoding/hex"
+	"sync"
 )
+
+var lock sync.Mutex
 
 //FileInfo represent info about file
 type FileInfo struct {
@@ -31,48 +34,59 @@ func ReadFiles(path []string) {
 		log.Println(err)
 		return
 	}
+	var wg sync.WaitGroup
 	w := csv.NewWriter(csvFile)
 
+	wg.Add(len(path))
 	for i :=0; i<len(path); i++ {
-		var filesInfo []FileInfo
-		var subFolders []string
-
-		//read files from folder
-		fmt.Println("Files from " + path[i] + " :")
-		files, err := ioutil.ReadDir(path[i])
-		if err != nil {
-			fmt.Println("no such directory")
-		} else {
-			//write files info into struct if files exist
-			if len(files) != 0 {
-					filesInfo, subFolders = FormatFiles(files, path[i])
-					for _,sub := range subFolders{
-						path = append(path, sub)
-					}
-
-					WriteIntoCSV(w, filesInfo)
-			} else {
-				fmt.Println("no files")
-			}
-		}
-
+		go GetFilesFromFolder(path[i], w, &wg)
 	}
 
+	wg.Wait()
 	csvFile.Close()
 
 
 }
 
+
+func GetFilesFromFolder(path string, w *csv.Writer, wg *sync.WaitGroup) {
+	defer wg.Done()
+	var filesInfo []FileInfo
+	var subFolders []string
+
+	//read files from folder
+	//fmt.Println("Files from " + path + " :")
+	files, err := ioutil.ReadDir(path)
+	if err != nil {
+		fmt.Println("no such directory")
+	} else {
+		//write files info into struct if files exist
+		if len(files) != 0 {
+			filesInfo, subFolders = FormatFiles(files, path)
+			for _,sub := range subFolders{
+				wg.Add(1)
+				go GetFilesFromFolder(sub, w, wg)
+			}
+
+			WriteIntoCSV(w, filesInfo)
+		} else {
+			//fmt.Println("no files")
+		}
+	}
+}
+
 //WriteIntoCSV format struct and write into CSV
 func WriteIntoCSV(w *csv.Writer, filesInfo []FileInfo) {
-	for j, f := range filesInfo {
+	lock.Lock()
+	defer lock.Unlock()
+	for _, f := range filesInfo {
 		if len(f.Path) > 0 {
 			var str []string
 			str = append(str, f.Path, f.Name, f.Size, f.Modified, f.Hash)
 			if err := w.Write(str); err != nil {
 				log.Fatalln("error writing record to csv:", err)
 			}
-			log.Println(filesInfo[j])
+			//log.Println(filesInfo[j])
 		}
 
 	}
@@ -105,10 +119,12 @@ func FormatFiles(files []os.FileInfo, path string) ([]FileInfo, []string) {
 //CreateHash return a unique hash256 of file
 func CreateHash(path string) string {
 	f, err := os.Open(path)
-	if err != nil {
-		log.Fatal(err)
-	}
 	defer f.Close()
+	if err != nil {
+		log.Println("can't create hash, file not found")
+		return "no access to file"
+	}
+
 
 	h := sha256.New()
 	if _, err := io.Copy(h, f); err != nil {
