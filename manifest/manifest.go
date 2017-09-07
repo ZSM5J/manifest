@@ -49,7 +49,7 @@ func ReadFiles(path []string) {
 }
 
 
-func GetFilesFromFolder(path string, w *csv.Writer, wg *sync.WaitGroup) {
+func GetFilesFromFolder(path string, w *csv.Writer, wg *sync.WaitGroup)  {
 	defer wg.Done()
 	var filesInfo []FileInfo
 	var subFolders []string
@@ -65,7 +65,7 @@ func GetFilesFromFolder(path string, w *csv.Writer, wg *sync.WaitGroup) {
 			filesInfo, subFolders = FormatFiles(files, path)
 			for _,sub := range subFolders{
 				wg.Add(1)
-				go GetFilesFromFolder(sub, w, wg)
+				go  GetFilesFromFolder(sub, w, wg)
 			}
 
 			WriteIntoCSV(w, filesInfo)
@@ -121,7 +121,6 @@ func CreateHash(path string) string {
 	f, err := os.Open(path)
 	defer f.Close()
 	if err != nil {
-		log.Println("can't create hash, file not found")
 		return "no access to file"
 	}
 

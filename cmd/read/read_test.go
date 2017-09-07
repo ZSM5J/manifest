@@ -5,7 +5,7 @@ import (
 	"manifest/manifest"
 )
 
-func TestRead(t *testing.T) {
+func BenchmarkRead(b *testing.B) {
 	paths := []string{"/home/owner/"}
 	manifest.ReadFiles(paths)
 }
