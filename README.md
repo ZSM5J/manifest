@@ -17,4 +17,4 @@ If you need to merge snapshots:
 1. Go to cmd/merge
 2. When open terminal and execute ./merge
 3. In console you will see snap shot list with ID
-4. Right into terminal merge "1st snapshot id" "2n snapshot id" and so on. Example "merge 1 5 8" 
+4. Write into terminal merge "1st snapshot id" "2n snapshot id" and so on. Example "merge 1 5 8" 
